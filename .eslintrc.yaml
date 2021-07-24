@@ -1,0 +1,43 @@
+root: true
+env:
+  node: true
+  jest: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  project: "./tsconfig.json"
+plugins:
+  - "@typescript-eslint"
+  - "simple-import-sort"
+  - "import"
+extends:
+  - "eslint:recommended"
+  - "plugin:import/errors"
+  - "plugin:import/warnings"
+  - "plugin:@typescript-eslint/eslint-recommended"
+  - "plugin:@typescript-eslint/recommended"
+  - "plugin:prettier/recommended"
+rules:
+  simple-import-sort/imports:
+    - "error"
+    - groups:
+        - ["^\\u0000"]
+        - ["^@?\\w"]
+        # Since we are using absolute imports, the directories inside src
+        # must be specified here until there is a solution
+        # https://github.com/lydell/eslint-plugin-simple-import-sort/issues/31
+        - ["^(lexorank|numeralSystems|utils)(/.*|$)"]
+        - ["^\\."]
+  "@typescript-eslint/no-unused-vars":
+    - "warn"
+    - argsIgnorePattern: "^_"
+settings:
+  import/parsers:
+    "@typescript-eslint/parser":
+      - ".ts"
+  import/resolver:
+    typescript: {}
+    node:
+      extensions: [".js", ".ts"]
+      paths:
+        - "node_modules"
+        - "src"
