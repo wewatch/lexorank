@@ -1,38 +1,30 @@
-import {
-  INumeralSystem,
-  NumeralSystem10,
-  NumeralSystem36,
-  NumeralSystem64,
-} from "./index";
-
-const CLASSES = [NumeralSystem10, NumeralSystem36, NumeralSystem64];
-const INSTANCES: INumeralSystem[] = CLASSES.map((cls) => new cls());
+import { NUMERAL_SYSTEMS } from "../setupTests";
 
 describe("Numeral Systems", () => {
   it("toDigit and toChar are the inverse of each other", () => {
-    for (const instance of INSTANCES) {
-      for (const char of instance.CHARS) {
-        expect(instance.toChar(instance.toDigit(char))).toStrictEqual(char);
+    for (const system of NUMERAL_SYSTEMS) {
+      for (const char of system.CHARS) {
+        expect(system.toChar(system.toDigit(char))).toEqual(char);
       }
     }
   });
 
   it("throws an error for invalid digit", () => {
-    for (const instance of INSTANCES) {
-      const base = instance.base;
+    for (const system of NUMERAL_SYSTEMS) {
+      const base = system.base;
 
       expect(() => {
-        instance.toChar(base);
+        system.toChar(base);
       }).toThrow(`Not a valid digit: ${base}`);
     }
   });
 
   it("throws an error for invalid char", () => {
-    for (const instance of INSTANCES) {
+    for (const system of NUMERAL_SYSTEMS) {
       const invalidChar = "?";
 
       expect(() => {
-        instance.toDigit(invalidChar);
+        system.toDigit(invalidChar);
       }).toThrow(`Not a valid char: ${invalidChar}`);
     }
   });

@@ -60,9 +60,6 @@ export class LexoInteger {
 
   private static ZERO_MAG = [0];
   private static ONE_MAG = [1];
-  private static NEGATIVE_SIGN = -1;
-  private static ZERO_SIGN = 0;
-  private static POSITIVE_SIGN = 1;
 
   private static add(sys: INumeralSystem, l: number[], r: number[]): number[] {
     const estimatedSize = Math.max(l.length, r.length);
@@ -289,7 +286,7 @@ export class LexoInteger {
   }
 
   public shiftRight(times = 1): LexoInteger {
-    if (this.mag.length - times <= 0) {
+    if (this.mag.length <= times) {
       return LexoInteger.zero(this.sys);
     }
 
@@ -334,10 +331,7 @@ export class LexoInteger {
     if (this.sign === -1) {
       if (other.sign === -1) {
         const cmp = LexoInteger.compare(this.mag, other.mag);
-        if (cmp === -1) {
-          return 1;
-        }
-        return cmp === 1 ? -1 : 0;
+        return -cmp;
       }
 
       return -1;

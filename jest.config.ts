@@ -11,6 +11,7 @@ const config: Config.InitialOptions = {
   coverageDirectory: "coverage",
   testEnvironment: "node",
   moduleDirectories: ["node_modules", "src"],
+  setupFiles: ["<rootDir>/src/setupTests.ts"],
 };
 
 export default config;
