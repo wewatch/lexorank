@@ -1,26 +1,10 @@
-import { ILexoNumeralSystem } from "./lexoNumeralSystem";
+import { BaseNumeralSystem } from "./base";
 
-export class LexoNumeralSystem64 implements ILexoNumeralSystem {
-  private DIGITS =
+export class NumeralSystem64 extends BaseNumeralSystem {
+  readonly CHARS =
     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ^_abcdefghijklmnopqrstuvwxyz".split(
       "",
     );
-
-  getBase(): number {
-    return 64;
-  }
-
-  getPositiveChar(): string {
-    return "+";
-  }
-
-  getNegativeChar(): string {
-    return "-";
-  }
-
-  getRadixPointChar(): string {
-    return ":";
-  }
 
   toDigit(char: string): number {
     if (char >= "0" && char <= "9") {
@@ -48,7 +32,7 @@ export class LexoNumeralSystem64 implements ILexoNumeralSystem {
 
   toChar(digit: number): string {
     if (digit >= 0 && digit < this.getBase()) {
-      return this.DIGITS[digit];
+      return this.CHARS[digit];
     }
 
     throw new Error(`Not a valid digit: ${digit}`);

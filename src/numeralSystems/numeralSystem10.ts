@@ -1,17 +1,7 @@
-import { ILexoNumeralSystem } from "./lexoNumeralSystem";
+import { BaseNumeralSystem } from "./base";
 
-export class LexoNumeralSystem10 implements ILexoNumeralSystem {
-  getBase(): number {
-    return 10;
-  }
-
-  getPositiveChar(): string {
-    return "+";
-  }
-
-  getNegativeChar(): string {
-    return "-";
-  }
+export class NumeralSystem10 extends BaseNumeralSystem {
+  readonly CHARS = "0123456789".split("");
 
   getRadixPointChar(): string {
     return ".";

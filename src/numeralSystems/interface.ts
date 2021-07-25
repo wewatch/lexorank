@@ -1,4 +1,6 @@
-export interface ILexoNumeralSystem {
+export interface INumeralSystem {
+  readonly CHARS: string[];
+
   getBase(): number;
 
   getPositiveChar(): string;

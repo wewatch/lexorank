@@ -1,12 +1,13 @@
-import { LexoNumeralSystem36 } from "../numeralSystems";
-import { StringBuilder } from "../utils/stringBuilder";
+import { NumeralSystem36 } from "numeralSystems";
+import { StringBuilder } from "utils";
+
 import { LexoDecimal } from "./lexoDecimal";
 import { LexoRankBucket } from "./lexoRankBucket";
 
 export class LexoRank {
   public static get NUMERAL_SYSTEM() {
     if (!this._NUMERAL_SYSTEM) {
-      this._NUMERAL_SYSTEM = new LexoNumeralSystem36();
+      this._NUMERAL_SYSTEM = new NumeralSystem36();
     }
     return this._NUMERAL_SYSTEM;
   }

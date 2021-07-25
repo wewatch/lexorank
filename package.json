@@ -17,7 +17,7 @@
   "homepage": "https://github.com/wewatch/lexorank",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "yarn clean && tsc --build tsconfig.json",
+    "build": "yarn clean && tsc --build tsconfig.build.json",
     "test": "jest",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint --fix \"src/**/*.ts\"",

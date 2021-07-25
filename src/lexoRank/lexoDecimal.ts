@@ -1,14 +1,15 @@
-import { ILexoNumeralSystem } from "../numeralSystems";
-import { StringBuilder } from "../utils/stringBuilder";
+import { INumeralSystem } from "numeralSystems";
+import { StringBuilder } from "utils";
+
 import { LexoInteger } from "./lexoInteger";
 
 export class LexoDecimal {
-  public static half(sys: ILexoNumeralSystem): LexoDecimal {
+  public static half(sys: INumeralSystem): LexoDecimal {
     const mid: number = (sys.getBase() / 2) | 0;
     return LexoDecimal.make(LexoInteger.make(sys, 1, [mid]), 1);
   }
 
-  public static parse(str: string, system: ILexoNumeralSystem): LexoDecimal {
+  public static parse(str: string, system: INumeralSystem): LexoDecimal {
     const partialIndex = str.indexOf(system.getRadixPointChar());
     if (str.lastIndexOf(system.getRadixPointChar()) !== partialIndex) {
       throw new Error("More than one " + system.getRadixPointChar());
@@ -53,7 +54,7 @@ export class LexoDecimal {
     this.sig = sig;
   }
 
-  public getSystem(): ILexoNumeralSystem {
+  public getSystem(): INumeralSystem {
     return this.mag.getSystem();
   }
 

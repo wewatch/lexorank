@@ -5,7 +5,7 @@ export class StringBuilder {
     this.str = str;
   }
 
-  get length() {
+  get length(): number {
     return this.str.length;
   }
 
@@ -13,25 +13,23 @@ export class StringBuilder {
     this.str = this.str.substring(0, value);
   }
 
-  public append(str: string): StringBuilder {
+  append(str: string): StringBuilder {
     this.str = this.str + str;
     return this;
   }
 
-  public remove(startIndex: number, length: number): StringBuilder {
+  remove(startIndex: number, length: number): StringBuilder {
     this.str =
       this.str.substr(0, startIndex) + this.str.substr(startIndex + length);
     return this;
   }
 
-  public insert(index: number, value: string): StringBuilder {
+  insert(index: number, value: string): StringBuilder {
     this.str = this.str.substr(0, index) + value + this.str.substr(index);
     return this;
   }
 
-  public toString() {
+  toString(): string {
     return this.str;
   }
 }
-
-export default StringBuilder;

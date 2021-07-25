@@ -1,12 +1,8 @@
-import { ILexoNumeralSystem } from "../numeralSystems";
-import { StringBuilder } from "../utils/stringBuilder";
-import { lexoHelper } from "./lexoHelper";
+import { INumeralSystem } from "numeralSystems";
+import { arrayCopy, StringBuilder } from "utils";
 
 export class LexoInteger {
-  public static parse(
-    strFull: string,
-    system: ILexoNumeralSystem,
-  ): LexoInteger {
+  public static parse(strFull: string, system: INumeralSystem): LexoInteger {
     let str = strFull;
     let sign = 1;
     if (strFull.indexOf(system.getPositiveChar()) === 0) {
@@ -27,16 +23,16 @@ export class LexoInteger {
     return LexoInteger.make(system, sign, mag);
   }
 
-  public static zero(sys: ILexoNumeralSystem): LexoInteger {
+  public static zero(sys: INumeralSystem): LexoInteger {
     return new LexoInteger(sys, 0, LexoInteger.ZERO_MAG);
   }
 
-  public static one(sys: ILexoNumeralSystem): LexoInteger {
+  public static one(sys: INumeralSystem): LexoInteger {
     return LexoInteger.make(sys, 1, LexoInteger.ONE_MAG);
   }
 
   public static make(
-    sys: ILexoNumeralSystem,
+    sys: INumeralSystem,
     sign: number,
     mag: number[],
   ): LexoInteger {
@@ -57,8 +53,8 @@ export class LexoInteger {
       return new LexoInteger(sys, sign, mag);
     }
 
-    const nmag = new Array(actualLength).fill(0);
-    lexoHelper.arrayCopy(mag, 0, nmag, 0, actualLength);
+    const nmag = new Array<number>(actualLength).fill(0);
+    arrayCopy(mag, 0, nmag, 0, actualLength);
     return new LexoInteger(sys, sign, nmag);
   }
 
@@ -68,11 +64,7 @@ export class LexoInteger {
   private static ZERO_SIGN = 0;
   private static POSITIVE_SIGN = 1;
 
-  private static add(
-    sys: ILexoNumeralSystem,
-    l: number[],
-    r: number[],
-  ): number[] {
+  private static add(sys: INumeralSystem, l: number[], r: number[]): number[] {
     const estimatedSize = Math.max(l.length, r.length);
     const result = new Array(estimatedSize).fill(0);
     let carry = 0;
@@ -92,8 +84,8 @@ export class LexoInteger {
 
   private static extendWithCarry(mag: number[], carry: number): number[] {
     if (carry > 0) {
-      const extendedMag = new Array(mag.length + 1).fill(0);
-      lexoHelper.arrayCopy(mag, 0, extendedMag, 0, mag.length);
+      const extendedMag = new Array<number>(mag.length + 1).fill(0);
+      arrayCopy(mag, 0, extendedMag, 0, mag.length);
       extendedMag[extendedMag.length - 1] = carry;
       return extendedMag;
     }
@@ -102,7 +94,7 @@ export class LexoInteger {
   }
 
   private static subtract(
-    sys: ILexoNumeralSystem,
+    sys: INumeralSystem,
     l: number[],
     r: number[],
   ): number[] {
@@ -113,7 +105,7 @@ export class LexoInteger {
   }
 
   private static multiply(
-    sys: ILexoNumeralSystem,
+    sys: INumeralSystem,
     l: number[],
     r: number[],
   ): number[] {
@@ -135,7 +127,7 @@ export class LexoInteger {
   }
 
   private static complement(
-    sys: ILexoNumeralSystem,
+    sys: INumeralSystem,
     mag: number[],
     digits: number,
   ): number[] {
@@ -172,11 +164,11 @@ export class LexoInteger {
     return 0;
   }
 
-  private readonly sys: ILexoNumeralSystem;
+  private readonly sys: INumeralSystem;
   private readonly sign: number;
   private readonly mag: number[];
 
-  constructor(system: ILexoNumeralSystem, sign: number, mag: number[]) {
+  constructor(system: INumeralSystem, sign: number, mag: number[]) {
     this.sys = system;
     this.sign = sign;
     this.mag = mag;
@@ -291,8 +283,8 @@ export class LexoInteger {
       return this.shiftRight(Math.abs(times));
     }
 
-    const nmag = new Array(this.mag.length + times).fill(0);
-    lexoHelper.arrayCopy(this.mag, 0, nmag, times, this.mag.length);
+    const nmag = new Array<number>(this.mag.length + times).fill(0);
+    arrayCopy(this.mag, 0, nmag, times, this.mag.length);
     return LexoInteger.make(this.sys, this.sign, nmag);
   }
 
@@ -301,8 +293,8 @@ export class LexoInteger {
       return LexoInteger.zero(this.sys);
     }
 
-    const nmag = new Array(this.mag.length - times).fill(0);
-    lexoHelper.arrayCopy(this.mag, times, nmag, 0, nmag.length);
+    const nmag = new Array<number>(this.mag.length - times).fill(0);
+    arrayCopy(this.mag, times, nmag, 0, nmag.length);
     return LexoInteger.make(this.sys, this.sign, nmag);
   }
 
@@ -362,7 +354,7 @@ export class LexoInteger {
     return other.sign === 1 ? -1 : 0;
   }
 
-  public getSystem(): ILexoNumeralSystem {
+  public getSystem(): INumeralSystem {
     return this.sys;
   }
 
