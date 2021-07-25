@@ -1,6 +1,5 @@
-import { INumeralSystem } from "numeralSystems";
-import { StringBuilder } from "utils";
-
+import { INumeralSystem } from "../numeralSystems";
+import { StringBuilder } from "../utils";
 import { LexoInteger } from "./lexoInteger";
 
 export class LexoDecimal {

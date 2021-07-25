@@ -1,5 +1,5 @@
-import { INumeralSystem } from "numeralSystems";
-import { arrayCopy, StringBuilder } from "utils";
+import { INumeralSystem } from "../numeralSystems";
+import { arrayCopy, StringBuilder } from "../utils";
 
 export class LexoInteger {
   public static parse(strFull: string, system: INumeralSystem): LexoInteger {

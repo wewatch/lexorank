@@ -6,7 +6,6 @@
     "outDir": "./dist",
     "strict": true,
     "rootDir": "./src",
-    "baseUrl": "src",
     "noImplicitAny": false
   },
   "include": [

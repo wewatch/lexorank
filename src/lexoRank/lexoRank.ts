@@ -1,6 +1,5 @@
-import { NumeralSystem36 } from "numeralSystems";
-import { StringBuilder } from "utils";
-
+import { NumeralSystem36 } from "../numeralSystems";
+import { StringBuilder } from "../utils";
 import { LexoDecimal } from "./lexoDecimal";
 import { LexoRankBucket } from "./lexoRankBucket";
 
