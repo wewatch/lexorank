@@ -16,7 +16,7 @@ export class NumeralSystem36 extends BaseNumeralSystem {
   }
 
   toChar(digit: number): string {
-    if (digit >= 0 && digit < this.getBase()) {
+    if (digit >= 0 && digit < this.base) {
       return this.CHARS[digit];
     }
 

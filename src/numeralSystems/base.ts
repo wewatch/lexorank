@@ -3,19 +3,19 @@ import { INumeralSystem } from "./interface";
 export abstract class BaseNumeralSystem implements INumeralSystem {
   abstract readonly CHARS: string[];
 
-  getBase(): number {
+  get base(): number {
     return this.CHARS.length;
   }
 
-  getPositiveChar(): string {
+  get positiveChar(): string {
     return "+";
   }
 
-  getNegativeChar(): string {
+  get negativeChar(): string {
     return "-";
   }
 
-  getRadixPointChar(): string {
+  get radixPointChar(): string {
     return ":";
   }
 

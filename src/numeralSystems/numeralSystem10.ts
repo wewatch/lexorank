@@ -3,7 +3,7 @@ import { BaseNumeralSystem } from "./base";
 export class NumeralSystem10 extends BaseNumeralSystem {
   readonly CHARS = "0123456789".split("");
 
-  getRadixPointChar(): string {
+  get radixPointChar(): string {
     return ".";
   }
 
@@ -16,7 +16,7 @@ export class NumeralSystem10 extends BaseNumeralSystem {
   }
 
   toChar(digit: number): string {
-    if (digit >= 0 && digit < this.getBase()) {
+    if (digit >= 0 && digit < this.base) {
       return String.fromCharCode(digit + 48);
     }
 

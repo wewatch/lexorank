@@ -5,9 +5,9 @@ export class LexoInteger {
   public static parse(strFull: string, system: INumeralSystem): LexoInteger {
     let str = strFull;
     let sign = 1;
-    if (strFull.indexOf(system.getPositiveChar()) === 0) {
+    if (strFull.indexOf(system.positiveChar) === 0) {
       str = strFull.substring(1);
-    } else if (strFull.indexOf(system.getNegativeChar()) === 0) {
+    } else if (strFull.indexOf(system.negativeChar) === 0) {
       str = strFull.substring(1);
       sign = -1;
     }
@@ -72,7 +72,7 @@ export class LexoInteger {
       const lnum = i < l.length ? l[i] : 0;
       const rnum = i < r.length ? r[i] : 0;
       let sum = lnum + rnum + carry;
-      for (carry = 0; sum >= sys.getBase(); sum -= sys.getBase()) {
+      for (carry = 0; sum >= sys.base; sum -= sys.base) {
         ++carry;
       }
 
@@ -115,8 +115,8 @@ export class LexoInteger {
         const resultIndex = li + ri;
         for (
           result[resultIndex] += l[li] * r[ri];
-          result[resultIndex] >= sys.getBase();
-          result[resultIndex] -= sys.getBase()
+          result[resultIndex] >= sys.base;
+          result[resultIndex] -= sys.base
         ) {
           ++result[resultIndex + 1];
         }
@@ -135,9 +135,9 @@ export class LexoInteger {
       throw new Error("Expected at least 1 digit");
     }
 
-    const nmag = new Array(digits).fill(sys.getBase() - 1);
+    const nmag = new Array(digits).fill(sys.base - 1);
     for (let i = 0; i < mag.length; ++i) {
-      nmag[i] = sys.getBase() - 1 - mag[i];
+      nmag[i] = sys.base - 1 - mag[i];
     }
 
     return nmag;
@@ -372,7 +372,7 @@ export class LexoInteger {
     }
 
     if (this.sign === -1) {
-      sb.insert(0, this.sys.getNegativeChar());
+      sb.insert(0, this.sys.negativeChar);
     }
 
     return sb.toString();
@@ -387,9 +387,7 @@ export class LexoInteger {
       return false;
     }
 
-    return (
-      this.sys.getBase() === other.sys.getBase() && this.compareTo(other) === 0
-    );
+    return this.sys.base === other.sys.base && this.compareTo(other) === 0;
   }
 
   public toString(): string {
@@ -401,7 +399,7 @@ export class LexoInteger {
   }
 
   private checkSystem(other: LexoInteger) {
-    if (this.sys.getBase() !== other.sys.getBase()) {
+    if (this.sys.base !== other.sys.base) {
       throw new Error("Expected numbers of same numeral sys");
     }
   }

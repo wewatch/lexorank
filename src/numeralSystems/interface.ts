@@ -1,13 +1,13 @@
 export interface INumeralSystem {
   readonly CHARS: string[];
 
-  getBase(): number;
+  get base(): number;
 
-  getPositiveChar(): string;
+  get positiveChar(): string;
 
-  getNegativeChar(): string;
+  get negativeChar(): string;
 
-  getRadixPointChar(): string;
+  get radixPointChar(): string;
 
   toDigit(var1: string): number;
 

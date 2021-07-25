@@ -80,7 +80,7 @@ export class LexoRank {
   private static get INITIAL_MAX_DECIMAL(): LexoDecimal {
     if (!this._INITIAL_MAX_DECIMAL) {
       this._INITIAL_MAX_DECIMAL = LexoDecimal.parse(
-        LexoRank.NUMERAL_SYSTEM.toChar(LexoRank.NUMERAL_SYSTEM.getBase() - 2) +
+        LexoRank.NUMERAL_SYSTEM.toChar(LexoRank.NUMERAL_SYSTEM.base - 2) +
           "00000",
         LexoRank.NUMERAL_SYSTEM,
       );
@@ -111,7 +111,7 @@ export class LexoRank {
   }
 
   public static between(oLeft: LexoDecimal, oRight: LexoDecimal): LexoDecimal {
-    if (oLeft.getSystem().getBase() !== oRight.getSystem().getBase()) {
+    if (oLeft.getSystem().base !== oRight.getSystem().base) {
       throw new Error("Expected same system");
     }
 
@@ -177,7 +177,7 @@ export class LexoRank {
   }
 
   public static from(bucket: LexoRankBucket, decimal: LexoDecimal): LexoRank {
-    if (decimal.getSystem().getBase() !== LexoRank.NUMERAL_SYSTEM.getBase()) {
+    if (decimal.getSystem().base !== LexoRank.NUMERAL_SYSTEM.base) {
       throw new Error("Expected different system");
     }
 
@@ -246,12 +246,12 @@ export class LexoRank {
     const formatVal = decimal.format();
     const val = new StringBuilder(formatVal);
     let partialIndex = formatVal.indexOf(
-      LexoRank.NUMERAL_SYSTEM.getRadixPointChar(),
+      LexoRank.NUMERAL_SYSTEM.radixPointChar,
     );
     const zero = LexoRank.NUMERAL_SYSTEM.toChar(0);
     if (partialIndex < 0) {
       partialIndex = formatVal.length;
-      val.append(LexoRank.NUMERAL_SYSTEM.getRadixPointChar());
+      val.append(LexoRank.NUMERAL_SYSTEM.radixPointChar);
     }
 
     while (partialIndex < 6) {

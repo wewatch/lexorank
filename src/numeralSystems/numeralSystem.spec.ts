@@ -19,7 +19,7 @@ describe("Numeral Systems", () => {
 
   it("throws an error for invalid digit", () => {
     for (const instance of INSTANCES) {
-      const base = instance.getBase();
+      const base = instance.base;
 
       expect(() => {
         instance.toChar(base);
