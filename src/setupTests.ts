@@ -5,11 +5,25 @@ import {
   NumeralSystem64,
 } from "./index";
 
-const NUMERAL_SYSTEM_CLASSES = [
-  NumeralSystem10,
-  NumeralSystem36,
-  NumeralSystem64,
-];
-export const NUMERAL_SYSTEMS: INumeralSystem[] = NUMERAL_SYSTEM_CLASSES.map(
-  (cls) => new cls(),
-);
+interface TestCase {
+  system: INumeralSystem;
+  base: number;
+}
+
+const NUMERAL_SYSTEM_CLASSES = {
+  10: NumeralSystem10,
+  36: NumeralSystem36,
+  64: NumeralSystem64,
+};
+
+export const getTestCases = (bases = [10, 36, 64]): TestCase[] => {
+  return bases.map((base) => {
+    const cls = NUMERAL_SYSTEM_CLASSES[base];
+    const system = new cls();
+
+    return {
+      system,
+      base,
+    };
+  });
+};

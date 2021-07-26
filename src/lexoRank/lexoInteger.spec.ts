@@ -1,41 +1,34 @@
-import { NumeralSystem10, NumeralSystem36 } from "../numeralSystems";
-import { NUMERAL_SYSTEMS } from "../setupTests";
+import { getTestCases } from "../setupTests";
 import { LexoInteger } from "./lexoInteger";
 
-test("Special values", () => {
-  for (const system of NUMERAL_SYSTEMS) {
-    const zero = LexoInteger.zero(system);
-    expect(zero.isZero()).toEqual(true);
-    expect(zero.isOne()).toEqual(false);
+test.each(getTestCases())("Special values base $base", ({ system }) => {
+  const zero = LexoInteger.zero(system);
+  expect(zero.isZero()).toEqual(true);
+  expect(zero.isOne()).toEqual(false);
 
-    const one = LexoInteger.one(system);
-    expect(one.isOne()).toEqual(true);
-    expect(one.isZero()).toEqual(false);
-  }
+  const one = LexoInteger.one(system);
+  expect(one.isOne()).toEqual(true);
+  expect(one.isZero()).toEqual(false);
 });
 
-test("Parse", () => {
-  for (const system of NUMERAL_SYSTEMS) {
-    let parsed = LexoInteger.parse("42", system);
-    expect(parsed).toEqual(LexoInteger.make(system, 1, [2, 4]));
+test.each(getTestCases())("Parse base $base", ({ system }) => {
+  let parsed = LexoInteger.parse("42", system);
+  expect(parsed).toEqual(LexoInteger.make(system, 1, [2, 4]));
 
-    parsed = LexoInteger.parse("+42", system);
-    expect(parsed).toEqual(LexoInteger.make(system, 1, [2, 4]));
+  parsed = LexoInteger.parse("+42", system);
+  expect(parsed).toEqual(LexoInteger.make(system, 1, [2, 4]));
 
-    parsed = LexoInteger.parse("-42", system);
-    expect(parsed).toEqual(LexoInteger.make(system, -1, [2, 4]));
+  parsed = LexoInteger.parse("-42", system);
+  expect(parsed).toEqual(LexoInteger.make(system, -1, [2, 4]));
 
-    expect(() => {
-      LexoInteger.parse("?", system);
-    }).toThrow("Not a valid char: ?");
-  }
+  expect(() => {
+    LexoInteger.parse("?", system);
+  }).toThrow("Not a valid char: ?");
 });
 
-test("Arithmetics", () => {
-  for (const systemCls of [NumeralSystem10, NumeralSystem36]) {
-    const system = new systemCls();
-    const base = system.base;
-
+test.each(getTestCases([10, 36]))(
+  "Arithmetics base $base",
+  ({ system, base }) => {
     const _ = (num: number) => LexoInteger.parse(num.toString(base), system);
 
     const firstNumber = 42;
@@ -105,5 +98,5 @@ test("Arithmetics", () => {
 
     // Equals
     expect(first.equals(first)).toEqual(true);
-  }
-});
+  },
+);
