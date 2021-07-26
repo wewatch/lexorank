@@ -110,15 +110,15 @@ export class LexoRank {
   }
 
   public static between(oLeft: LexoDecimal, oRight: LexoDecimal): LexoDecimal {
-    if (oLeft.getSystem().base !== oRight.getSystem().base) {
+    if (oLeft.system.base !== oRight.system.base) {
       throw new Error("Expected same system");
     }
 
     let left = oLeft;
     let right = oRight;
     let nLeft: LexoDecimal;
-    if (oLeft.getScale() < oRight.getScale()) {
-      nLeft = oRight.setScale(oLeft.getScale(), false);
+    if (oLeft.scale < oRight.scale) {
+      nLeft = oRight.setScale(oLeft.scale, false);
       if (oLeft.compareTo(nLeft) >= 0) {
         return LexoRank.mid(oLeft, oRight);
       }
@@ -126,8 +126,8 @@ export class LexoRank {
       right = nLeft;
     }
 
-    if (oLeft.getScale() > right.getScale()) {
-      nLeft = oLeft.setScale(right.getScale(), true);
+    if (oLeft.scale > right.scale) {
+      nLeft = oLeft.setScale(right.scale, true);
       if (nLeft.compareTo(right) >= 0) {
         return LexoRank.mid(oLeft, oRight);
       }
@@ -136,7 +136,7 @@ export class LexoRank {
     }
 
     let nRight: LexoDecimal;
-    for (let scale = left.getScale(); scale > 0; right = nRight) {
+    for (let scale = left.scale; scale > 0; right = nRight) {
       const nScale1 = scale - 1;
       const nLeft1 = left.setScale(nScale1, true);
       nRight = right.setScale(nScale1, false);
@@ -155,7 +155,7 @@ export class LexoRank {
     let mid = LexoRank.middleInternal(oLeft, oRight, left, right);
 
     let nScale: number;
-    for (let mScale = mid.getScale(); mScale > 0; mScale = nScale) {
+    for (let mScale = mid.scale; mScale > 0; mScale = nScale) {
       nScale = mScale - 1;
       const nMid = mid.setScale(nScale);
       if (oLeft.compareTo(nMid) >= 0 || nMid.compareTo(oRight) >= 0) {
@@ -176,7 +176,7 @@ export class LexoRank {
   }
 
   public static from(bucket: LexoRankBucket, decimal: LexoDecimal): LexoRank {
-    if (decimal.getSystem().base !== LexoRank.NUMERAL_SYSTEM.base) {
+    if (decimal.system.base !== LexoRank.NUMERAL_SYSTEM.base) {
       throw new Error("Expected different system");
     }
 
@@ -225,10 +225,9 @@ export class LexoRank {
 
   private static mid(left: LexoDecimal, right: LexoDecimal): LexoDecimal {
     const sum = left.add(right);
-    const mid = sum.multiply(LexoDecimal.half(left.getSystem()));
-    const scale =
-      left.getScale() > right.getScale() ? left.getScale() : right.getScale();
-    if (mid.getScale() > scale) {
+    const mid = sum.multiply(LexoDecimal.half(left.system));
+    const scale = left.scale > right.scale ? left.scale : right.scale;
+    if (mid.scale > scale) {
       const roundDown = mid.setScale(scale, false);
       if (roundDown.compareTo(left) > 0) {
         return roundDown;

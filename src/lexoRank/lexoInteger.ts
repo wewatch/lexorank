@@ -161,15 +161,11 @@ export class LexoInteger {
     return 0;
   }
 
-  private readonly sys: INumeralSystem;
-  private readonly sign: number;
-  private readonly mag: number[];
-
-  constructor(system: INumeralSystem, sign: number, mag: number[]) {
-    this.sys = system;
-    this.sign = sign;
-    this.mag = mag;
-  }
+  constructor(
+    readonly system: INumeralSystem,
+    readonly sign: number,
+    readonly mag: number[],
+  ) {}
 
   public add(other: LexoInteger): LexoInteger {
     this.checkSystem(other);
@@ -193,8 +189,8 @@ export class LexoInteger {
       return this.subtract(pos);
     }
 
-    const result = LexoInteger.add(this.sys, this.mag, other.mag);
-    return LexoInteger.make(this.sys, this.sign, result);
+    const result = LexoInteger.add(this.system, this.mag, other.mag);
+    return LexoInteger.make(this.system, this.sign, result);
   }
 
   public subtract(other: LexoInteger): LexoInteger {
@@ -221,19 +217,19 @@ export class LexoInteger {
 
     const cmp = LexoInteger.compare(this.mag, other.mag);
     if (cmp === 0) {
-      return LexoInteger.zero(this.sys);
+      return LexoInteger.zero(this.system);
     }
 
     return cmp < 0
       ? LexoInteger.make(
-          this.sys,
+          this.system,
           this.sign === -1 ? 1 : -1,
-          LexoInteger.subtract(this.sys, other.mag, this.mag),
+          LexoInteger.subtract(this.system, other.mag, this.mag),
         )
       : LexoInteger.make(
-          this.sys,
+          this.system,
           this.sign === -1 ? -1 : 1,
-          LexoInteger.subtract(this.sys, this.mag, other.mag),
+          LexoInteger.subtract(this.system, this.mag, other.mag),
         );
   }
 
@@ -249,26 +245,26 @@ export class LexoInteger {
 
     if (this.isOneish()) {
       return this.sign === other.sign
-        ? LexoInteger.make(this.sys, 1, other.mag)
-        : LexoInteger.make(this.sys, -1, other.mag);
+        ? LexoInteger.make(this.system, 1, other.mag)
+        : LexoInteger.make(this.system, -1, other.mag);
     }
 
     if (other.isOneish()) {
       return this.sign === other.sign
-        ? LexoInteger.make(this.sys, 1, this.mag)
-        : LexoInteger.make(this.sys, -1, this.mag);
+        ? LexoInteger.make(this.system, 1, this.mag)
+        : LexoInteger.make(this.system, -1, this.mag);
     }
 
-    const newMag = LexoInteger.multiply(this.sys, this.mag, other.mag);
+    const newMag = LexoInteger.multiply(this.system, this.mag, other.mag);
     return this.sign === other.sign
-      ? LexoInteger.make(this.sys, 1, newMag)
-      : LexoInteger.make(this.sys, -1, newMag);
+      ? LexoInteger.make(this.system, 1, newMag)
+      : LexoInteger.make(this.system, -1, newMag);
   }
 
   public negate(): LexoInteger {
     return this.isZero()
       ? this
-      : LexoInteger.make(this.sys, this.sign === 1 ? -1 : 1, this.mag);
+      : LexoInteger.make(this.system, this.sign === 1 ? -1 : 1, this.mag);
   }
 
   public shiftLeft(times = 1): LexoInteger {
@@ -282,17 +278,17 @@ export class LexoInteger {
 
     const nmag = new Array<number>(this.mag.length + times).fill(0);
     arrayCopy(this.mag, 0, nmag, times, this.mag.length);
-    return LexoInteger.make(this.sys, this.sign, nmag);
+    return LexoInteger.make(this.system, this.sign, nmag);
   }
 
   public shiftRight(times = 1): LexoInteger {
     if (this.mag.length <= times) {
-      return LexoInteger.zero(this.sys);
+      return LexoInteger.zero(this.system);
     }
 
     const nmag = new Array<number>(this.mag.length - times).fill(0);
     arrayCopy(this.mag, times, nmag, 0, nmag.length);
-    return LexoInteger.make(this.sys, this.sign, nmag);
+    return LexoInteger.make(this.system, this.sign, nmag);
   }
 
   public complement(): LexoInteger {
@@ -301,9 +297,9 @@ export class LexoInteger {
 
   public complementDigits(digits: number): LexoInteger {
     return LexoInteger.make(
-      this.sys,
+      this.system,
       this.sign,
-      LexoInteger.complement(this.sys, this.mag, digits),
+      LexoInteger.complement(this.system, this.mag, digits),
     );
   }
 
@@ -348,13 +344,9 @@ export class LexoInteger {
     return other.sign === 1 ? -1 : 0;
   }
 
-  public getSystem(): INumeralSystem {
-    return this.sys;
-  }
-
   public format(): string {
     if (this.isZero()) {
-      return "" + this.sys.toChar(0);
+      return "" + this.system.toChar(0);
     }
 
     const sb = new StringBuilder();
@@ -362,11 +354,11 @@ export class LexoInteger {
     const var3 = var2.length;
     for (let var4 = 0; var4 < var3; ++var4) {
       const digit = var2[var4];
-      sb.insert(0, this.sys.toChar(digit));
+      sb.insert(0, this.system.toChar(digit));
     }
 
     if (this.sign === -1) {
-      sb.insert(0, this.sys.negativeChar);
+      sb.insert(0, this.system.negativeChar);
     }
 
     return sb.toString();
@@ -381,7 +373,9 @@ export class LexoInteger {
       return false;
     }
 
-    return this.sys.base === other.sys.base && this.compareTo(other) === 0;
+    return (
+      this.system.base === other.system.base && this.compareTo(other) === 0
+    );
   }
 
   public toString(): string {
@@ -393,7 +387,7 @@ export class LexoInteger {
   }
 
   private checkSystem(other: LexoInteger) {
-    if (this.sys.base !== other.sys.base) {
+    if (this.system.base !== other.system.base) {
       throw new Error("Expected numbers of same numeral sys");
     }
   }
