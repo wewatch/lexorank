@@ -20,6 +20,7 @@ export class LexoDecimal {
 
     const intStr =
       str.substring(0, partialIndex) + str.substring(partialIndex + 1);
+
     return LexoDecimal.make(
       LexoInteger.parse(intStr, system),
       str.length - 1 - partialIndex,
@@ -55,37 +56,46 @@ export class LexoDecimal {
   }
 
   public add(other: LexoDecimal): LexoDecimal {
-    let thisMag = this.mag;
-    let thisSig = this.scale;
-    let otherMag = other.mag;
-    let otherSig: number;
-    for (otherSig = other.scale; thisSig < otherSig; ++thisSig) {
-      thisMag = thisMag.shiftLeft();
-    }
+    const {
+      firstMag: thisMag,
+      secondMag: otherMag,
+      scale,
+    } = LexoDecimal.alignScale(this, other);
 
-    while (thisSig > otherSig) {
-      otherMag = otherMag.shiftLeft();
-      ++otherSig;
-    }
-
-    return LexoDecimal.make(thisMag.add(otherMag), thisSig);
+    return LexoDecimal.make(thisMag.add(otherMag), scale);
   }
 
   public subtract(other: LexoDecimal): LexoDecimal {
-    let thisMag = this.mag;
-    let thisSig = this.scale;
-    let otherMag = other.mag;
-    let otherSig: number;
-    for (otherSig = other.scale; thisSig < otherSig; ++thisSig) {
-      thisMag = thisMag.shiftLeft();
+    const {
+      firstMag: thisMag,
+      secondMag: otherMag,
+      scale,
+    } = LexoDecimal.alignScale(this, other);
+
+    return LexoDecimal.make(thisMag.subtract(otherMag), scale);
+  }
+
+  private static alignScale(first: LexoDecimal, second: LexoDecimal) {
+    let firstMag = first.mag;
+    let firstScale = first.scale;
+    let secondMag = second.mag;
+    let secondScale = second.scale;
+
+    while (firstScale < secondScale) {
+      firstMag = firstMag.shiftLeft();
+      ++firstScale;
     }
 
-    while (thisSig > otherSig) {
-      otherMag = otherMag.shiftLeft();
-      ++otherSig;
+    while (firstScale > secondScale) {
+      secondMag = secondMag.shiftLeft();
+      ++secondScale;
     }
 
-    return LexoDecimal.make(thisMag.subtract(otherMag), thisSig);
+    return {
+      firstMag,
+      secondMag,
+      scale: firstScale,
+    };
   }
 
   public multiply(other: LexoDecimal): LexoDecimal {
@@ -166,7 +176,7 @@ export class LexoDecimal {
     }
 
     const sb = new StringBuilder(intStr);
-    const head = sb[0];
+    const head = sb.toString()[0];
     const specialHead =
       head === this.mag.system.positiveChar ||
       head === this.mag.system.negativeChar;
