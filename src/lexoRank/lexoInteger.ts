@@ -23,16 +23,16 @@ export class LexoInteger {
     return LexoInteger.make(system, sign, mag);
   }
 
-  public static zero(sys: INumeralSystem): LexoInteger {
-    return new LexoInteger(sys, 0, LexoInteger.ZERO_MAG);
+  public static zero(system: INumeralSystem): LexoInteger {
+    return new LexoInteger(system, 0, LexoInteger.ZERO_MAG);
   }
 
-  public static one(sys: INumeralSystem): LexoInteger {
-    return LexoInteger.make(sys, 1, LexoInteger.ONE_MAG);
+  public static one(system: INumeralSystem): LexoInteger {
+    return LexoInteger.make(system, 1, LexoInteger.ONE_MAG);
   }
 
   public static make(
-    sys: INumeralSystem,
+    system: INumeralSystem,
     sign: number,
     mag: number[],
   ): LexoInteger {
@@ -46,30 +46,34 @@ export class LexoInteger {
     }
 
     if (actualLength === 0) {
-      return LexoInteger.zero(sys);
+      return LexoInteger.zero(system);
     }
 
     if (actualLength === mag.length) {
-      return new LexoInteger(sys, sign, mag);
+      return new LexoInteger(system, sign, mag);
     }
 
-    const nmag = new Array<number>(actualLength).fill(0);
-    arrayCopy(mag, 0, nmag, 0, actualLength);
-    return new LexoInteger(sys, sign, nmag);
+    const newMag = new Array<number>(actualLength).fill(0);
+    arrayCopy(mag, 0, newMag, 0, actualLength);
+    return new LexoInteger(system, sign, newMag);
   }
 
   private static ZERO_MAG = [0];
   private static ONE_MAG = [1];
 
-  private static add(sys: INumeralSystem, l: number[], r: number[]): number[] {
-    const estimatedSize = Math.max(l.length, r.length);
+  private static add(
+    system: INumeralSystem,
+    left: number[],
+    right: number[],
+  ): number[] {
+    const estimatedSize = Math.max(left.length, right.length);
     const result = new Array(estimatedSize).fill(0);
     let carry = 0;
     for (let i = 0; i < estimatedSize; ++i) {
-      const lnum = i < l.length ? l[i] : 0;
-      const rnum = i < r.length ? r[i] : 0;
-      let sum = lnum + rnum + carry;
-      for (carry = 0; sum >= sys.base; sum -= sys.base) {
+      const leftNum = i < left.length ? left[i] : 0;
+      const rightNum = i < right.length ? right[i] : 0;
+      let sum = leftNum + rightNum + carry;
+      for (carry = 0; sum >= system.base; sum -= system.base) {
         ++carry;
       }
 
@@ -91,29 +95,29 @@ export class LexoInteger {
   }
 
   private static subtract(
-    sys: INumeralSystem,
-    l: number[],
-    r: number[],
+    system: INumeralSystem,
+    left: number[],
+    right: number[],
   ): number[] {
-    const rComplement = LexoInteger.complement(sys, r, l.length);
-    const rSum = LexoInteger.add(sys, l, rComplement);
+    const rComplement = LexoInteger.complement(system, right, left.length);
+    const rSum = LexoInteger.add(system, left, rComplement);
     rSum[rSum.length - 1] = 0;
-    return LexoInteger.add(sys, rSum, LexoInteger.ONE_MAG);
+    return LexoInteger.add(system, rSum, LexoInteger.ONE_MAG);
   }
 
   private static multiply(
-    sys: INumeralSystem,
-    l: number[],
-    r: number[],
+    system: INumeralSystem,
+    left: number[],
+    right: number[],
   ): number[] {
-    const result = new Array(l.length + r.length).fill(0);
-    for (let li = 0; li < l.length; ++li) {
-      for (let ri = 0; ri < r.length; ++ri) {
+    const result = new Array(left.length + right.length).fill(0);
+    for (let li = 0; li < left.length; ++li) {
+      for (let ri = 0; ri < right.length; ++ri) {
         const resultIndex = li + ri;
         for (
-          result[resultIndex] += l[li] * r[ri];
-          result[resultIndex] >= sys.base;
-          result[resultIndex] -= sys.base
+          result[resultIndex] += left[li] * right[ri];
+          result[resultIndex] >= system.base;
+          result[resultIndex] -= system.base
         ) {
           ++result[resultIndex + 1];
         }
@@ -124,7 +128,7 @@ export class LexoInteger {
   }
 
   private static complement(
-    sys: INumeralSystem,
+    system: INumeralSystem,
     mag: number[],
     digits: number,
   ): number[] {
@@ -132,28 +136,28 @@ export class LexoInteger {
       throw new Error("Expected at least 1 digit");
     }
 
-    const nmag = new Array(digits).fill(sys.base - 1);
+    const newMag = new Array(digits).fill(system.base - 1);
     for (let i = 0; i < mag.length; ++i) {
-      nmag[i] = sys.base - 1 - mag[i];
+      newMag[i] = system.base - 1 - mag[i];
     }
 
-    return nmag;
+    return newMag;
   }
 
-  private static compare(l: number[], r: number[]): number {
-    if (l.length < r.length) {
+  private static compare(left: number[], right: number[]): number {
+    if (left.length < right.length) {
       return -1;
     }
 
-    if (l.length > r.length) {
+    if (left.length > right.length) {
       return 1;
     }
 
-    for (let i = l.length - 1; i >= 0; --i) {
-      if (l[i] < r[i]) {
+    for (let i = left.length - 1; i >= 0; --i) {
+      if (left[i] < right[i]) {
         return -1;
       }
-      if (l[i] > r[i]) {
+      if (left[i] > right[i]) {
         return 1;
       }
     }
@@ -276,9 +280,9 @@ export class LexoInteger {
       return this.shiftRight(Math.abs(times));
     }
 
-    const nmag = new Array<number>(this.mag.length + times).fill(0);
-    arrayCopy(this.mag, 0, nmag, times, this.mag.length);
-    return LexoInteger.make(this.system, this.sign, nmag);
+    const newMag = new Array<number>(this.mag.length + times).fill(0);
+    arrayCopy(this.mag, 0, newMag, times, this.mag.length);
+    return LexoInteger.make(this.system, this.sign, newMag);
   }
 
   public shiftRight(times = 1): LexoInteger {
@@ -286,9 +290,9 @@ export class LexoInteger {
       return LexoInteger.zero(this.system);
     }
 
-    const nmag = new Array<number>(this.mag.length - times).fill(0);
-    arrayCopy(this.mag, times, nmag, 0, nmag.length);
-    return LexoInteger.make(this.system, this.sign, nmag);
+    const newMag = new Array<number>(this.mag.length - times).fill(0);
+    arrayCopy(this.mag, times, newMag, 0, newMag.length);
+    return LexoInteger.make(this.system, this.sign, newMag);
   }
 
   public complement(): LexoInteger {
@@ -388,7 +392,7 @@ export class LexoInteger {
 
   private checkSystem(other: LexoInteger) {
     if (this.system.base !== other.system.base) {
-      throw new Error("Expected numbers of same numeral sys");
+      throw new Error("Expected numbers of same numeral system");
     }
   }
 }
