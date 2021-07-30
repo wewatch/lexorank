@@ -31,19 +31,19 @@ export class LexoDecimal {
     return LexoDecimal.make(integer, 0);
   }
 
-  public static make(integer: LexoInteger, sig: number): LexoDecimal {
+  public static make(integer: LexoInteger, scale: number): LexoDecimal {
     if (integer.isZero()) {
       return new LexoDecimal(integer, 0);
     }
 
     let zeroCount = 0;
-    for (let i = 0; i < sig && integer.getMag(i) === 0; ++i) {
+    for (let i = 0; i < scale && integer.getMag(i) === 0; ++i) {
       ++zeroCount;
     }
 
     const newInteger = integer.shiftRight(zeroCount);
-    const newSig = sig - zeroCount;
-    return new LexoDecimal(newInteger, newSig);
+    const newScale = scale - zeroCount;
+    return new LexoDecimal(newInteger, newScale);
   }
 
   /**
@@ -132,22 +132,22 @@ export class LexoDecimal {
     return true;
   }
 
-  public setScale(nsig: number, ceiling = false): LexoDecimal {
-    if (nsig >= this.scale) {
+  public setScale(newScale: number, ceiling = false): LexoDecimal {
+    if (newScale >= this.scale) {
       return this;
     }
 
-    if (nsig < 0) {
-      nsig = 0;
+    if (newScale < 0) {
+      newScale = 0;
     }
 
-    const diff = this.scale - nsig;
-    let nmag = this.mag.shiftRight(diff);
+    const diff = this.scale - newScale;
+    let newMag = this.mag.shiftRight(diff);
     if (ceiling) {
-      nmag = nmag.add(LexoInteger.one(nmag.system));
+      newMag = newMag.add(LexoInteger.one(newMag.system));
     }
 
-    return LexoDecimal.make(nmag, nsig);
+    return LexoDecimal.make(newMag, newScale);
   }
 
   public compareTo(other: LexoDecimal): number {
