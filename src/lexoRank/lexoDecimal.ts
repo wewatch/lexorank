@@ -11,7 +11,7 @@ export class LexoDecimal {
   public static parse(str: string, system: INumeralSystem): LexoDecimal {
     const partialIndex = str.indexOf(system.radixPointChar);
     if (str.lastIndexOf(system.radixPointChar) !== partialIndex) {
-      throw new Error("More than one " + system.radixPointChar);
+      throw new Error(`More than one ${system.radixPointChar}`);
     }
 
     if (partialIndex < 0) {
