@@ -104,7 +104,7 @@ export class LexoRank {
 
   public static from(bucket: LexoRankBucket, decimal: LexoDecimal): LexoRank {
     if (decimal.system.base !== LexoRank.config.numeralSystem.base) {
-      throw new Error("Expected different system");
+      throw new Error("Received different system");
     }
 
     return new LexoRank(bucket, decimal);
@@ -167,7 +167,7 @@ export class LexoRank {
     }
 
     while (val[val.length - 1] === zero) {
-      val.length = val.length - 1;
+      --val.length;
     }
 
     return val.toString();
@@ -217,14 +217,8 @@ export class LexoRank {
 
     if (cmp === 0) {
       throw new Error(
-        "Try to rank between issues with same rank this=" +
-          this +
-          " other=" +
-          other +
-          " this.decimal=" +
-          this.decimal +
-          " other.decimal=" +
-          other.decimal,
+        `Try to rank between items with same rank this=${this}, other=${other},` +
+          ` this.decimal=${this.decimal}, other.decimal=${other.decimal}`,
       );
     }
 
@@ -254,29 +248,21 @@ export class LexoRank {
     return this.value;
   }
 
+  public toString(): string {
+    return this.value;
+  }
+
   public equals(other: LexoRank): boolean {
     if (this === other) {
       return true;
     }
 
-    if (!other) {
-      return false;
-    }
-
     return this.value === other.value;
-  }
-
-  public toString(): string {
-    return this.value;
   }
 
   public compareTo(other: LexoRank): number {
     if (this === other) {
       return 0;
-    }
-
-    if (!other) {
-      return 1;
     }
 
     return this.value.localeCompare(other.value);

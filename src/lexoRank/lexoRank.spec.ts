@@ -4,6 +4,15 @@ describe("LexoRank", () => {
   it("Min", () => {
     const minRank = LexoRank.min();
     expect(minRank.toString()).toEqual("0|000000:");
+    expect(minRank.genPrev()).toEqual(minRank);
+    expect(LexoRank.parse(minRank.format())).toEqual(minRank);
+  });
+
+  it("Max", () => {
+    const maxRank = LexoRank.max();
+    expect(maxRank.toString()).toEqual("0|zzzzzz:");
+    expect(maxRank.genNext()).toEqual(maxRank);
+    expect(LexoRank.parse(maxRank.format())).toEqual(maxRank);
   });
 
   it("Between Min <-> Max", () => {
@@ -33,11 +42,6 @@ describe("LexoRank", () => {
     expect(prevRank.compareTo(between)).toBeLessThan(0);
   });
 
-  it("Max", () => {
-    const maxRank = LexoRank.max();
-    expect(maxRank.toString()).toEqual("0|zzzzzz:");
-  });
-
   it.each([
     ["0", "1", "0|0i0000:"],
     ["1", "0", "0|0i0000:"],
@@ -62,5 +66,27 @@ describe("LexoRank", () => {
 
     const between = prevRank.between(nextRank);
     expect(between.toString()).toEqual(expected);
+  });
+
+  it("Between with prev and next", () => {
+    const rank = LexoRank.middle();
+    const prev = rank.genPrev();
+    const next = rank.genNext();
+
+    expect(rank.equals(rank)).toBeTruthy();
+    expect(rank.compareTo(rank)).toEqual(0);
+
+    expect(rank).toEqual(prev.between(next));
+    expect(rank.equals(prev.between(next))).toBeTruthy();
+
+    const prev2 = prev.genPrev();
+    const next2 = next.genNext();
+
+    expect(prev).toEqual(rank.between(prev2));
+    expect(next).toEqual(rank.between(next2));
+
+    expect(() => rank.between(rank.inNextBucket())).toThrow();
+    expect(() => rank.between(rank.inPrevBucket())).toThrow();
+    expect(() => rank.between(rank)).toThrow();
   });
 });
