@@ -19,6 +19,7 @@
     "clean": "rimraf dist",
     "build": "yarn clean && tsc --build tsconfig.build.json",
     "test": "jest",
+    "test:cov": "jest --coverage",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint --fix \"src/**/*.ts\"",
     "pre-commit": "lint-staged",
