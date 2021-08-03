@@ -1,3 +1,4 @@
+import { LexoRankError } from "../error";
 import { StringBuilder } from "../utils";
 import { DEFAULT_CONFIG, LexoRankConfig } from "./config";
 import { LexoDecimal } from "./lexoDecimal";
@@ -38,7 +39,7 @@ export class LexoRank {
 
   public static between(oLeft: LexoDecimal, oRight: LexoDecimal): LexoDecimal {
     if (oLeft.system.base !== oRight.system.base) {
-      throw new Error("Expected same system");
+      throw new LexoRankError("Expected same system");
     }
 
     let left = oLeft;
@@ -104,7 +105,7 @@ export class LexoRank {
 
   public static from(bucket: LexoRankBucket, decimal: LexoDecimal): LexoRank {
     if (decimal.system.base !== LexoRank.config.numeralSystem.base) {
-      throw new Error("Received different system");
+      throw new LexoRankError("Received different system");
     }
 
     return new LexoRank(bucket, decimal);
@@ -204,7 +205,7 @@ export class LexoRank {
 
   public between(other: LexoRank): LexoRank {
     if (!this.bucket.equals(other.bucket)) {
-      throw new Error("Between works only within the same bucket");
+      throw new LexoRankError("Between works only within the same bucket");
     }
 
     const cmp = this.decimal.compareTo(other.decimal);
@@ -216,7 +217,7 @@ export class LexoRank {
     }
 
     if (cmp === 0) {
-      throw new Error(
+      throw new LexoRankError(
         `Try to rank between items with same rank this=${this}, other=${other},` +
           ` this.decimal=${this.decimal}, other.decimal=${other.decimal}`,
       );

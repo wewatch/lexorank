@@ -1,3 +1,5 @@
+import { LexoRankError } from "../error";
+
 export class LexoRankBucket {
   static readonly BUCKET_0 = new LexoRankBucket(0);
   static readonly BUCKET_1 = new LexoRankBucket(1);
@@ -22,7 +24,7 @@ export class LexoRankBucket {
     const bucket = LexoRankBucket.VALUES[value];
 
     if (bucket === undefined) {
-      throw new Error(`Unknown bucket: ${str}`);
+      throw new LexoRankError(`Unknown bucket: ${str}`);
     }
 
     return bucket;

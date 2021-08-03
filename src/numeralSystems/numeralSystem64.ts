@@ -1,3 +1,4 @@
+import { LexoRankError } from "../error";
 import { BaseNumeralSystem } from "./base";
 
 export class NumeralSystem64 extends BaseNumeralSystem {
@@ -27,7 +28,7 @@ export class NumeralSystem64 extends BaseNumeralSystem {
       return char.charCodeAt(0) - 97 + 38;
     }
 
-    throw new Error(`Not a valid char: ${char}`);
+    throw new LexoRankError(`Not a valid char: ${char}`);
   }
 
   toChar(digit: number): string {
@@ -35,6 +36,6 @@ export class NumeralSystem64 extends BaseNumeralSystem {
       return this.CHARS[digit];
     }
 
-    throw new Error(`Not a valid digit: ${digit}`);
+    throw new LexoRankError(`Not a valid digit: ${digit}`);
   }
 }

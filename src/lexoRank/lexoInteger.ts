@@ -1,3 +1,4 @@
+import { LexoRankError } from "../error";
 import { INumeralSystem } from "../numeralSystems";
 import { arrayCopy, StringBuilder } from "../utils";
 
@@ -133,7 +134,7 @@ export class LexoInteger {
     digits: number,
   ): number[] {
     if (digits <= 0) {
-      throw new Error("Expected at least 1 digit");
+      throw new LexoRankError("Expected at least 1 digit");
     }
 
     const newMag = new Array(digits).fill(system.base - 1);
@@ -392,7 +393,7 @@ export class LexoInteger {
 
   private checkSystem(other: LexoInteger) {
     if (this.system.base !== other.system.base) {
-      throw new Error("Expected numbers of same numeral system");
+      throw new LexoRankError("Expected numbers of same numeral system");
     }
   }
 }

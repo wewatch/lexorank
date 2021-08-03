@@ -1,3 +1,4 @@
+import { LexoRankError } from "../error";
 import { INumeralSystem } from "../numeralSystems";
 import { StringBuilder } from "../utils";
 import { LexoInteger } from "./lexoInteger";
@@ -11,7 +12,7 @@ export class LexoDecimal {
   public static parse(str: string, system: INumeralSystem): LexoDecimal {
     const partialIndex = str.indexOf(system.radixPointChar);
     if (str.lastIndexOf(system.radixPointChar) !== partialIndex) {
-      throw new Error(`More than one ${system.radixPointChar}`);
+      throw new LexoRankError(`More than one ${system.radixPointChar}`);
     }
 
     if (partialIndex < 0) {
