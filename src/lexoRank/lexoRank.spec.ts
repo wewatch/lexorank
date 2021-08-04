@@ -1,6 +1,7 @@
+import { buildLexoRank } from "./builder";
 import { LexoRank } from "./lexoRank";
 
-describe("LexoRank", () => {
+describe.each([LexoRank, buildLexoRank()])("LexoRank", (LexoRank) => {
   it("Min", () => {
     const minRank = LexoRank.min();
     expect(minRank.toString()).toEqual("0|000000:");

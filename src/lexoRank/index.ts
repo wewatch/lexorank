@@ -1,3 +1,4 @@
+export * from "./builder";
 export * from "./lexoDecimal";
 export * from "./lexoInteger";
 export * from "./lexoRank";

@@ -24,7 +24,7 @@ export interface LexoRankConfig {
   initialMaxDecimal: LexoDecimal;
 }
 
-export const configBuilder = ({
+export const buildConfig = ({
   NumeralSystem = NumeralSystem36,
   defaultGap = "8",
   maxDecimal = "1000000",
@@ -36,7 +36,7 @@ export const configBuilder = ({
   const zeroDecimal = LexoDecimal.parse("0", system);
   const oneDecimal = LexoDecimal.parse("1", system);
 
-  initialMaxDecimal ??= system.toChar(system.base - 2) + "00000";
+  initialMaxDecimal ??= system.toChar(system.base - 2) + maxDecimal.slice(2);
 
   return {
     numeralSystem: system,
@@ -50,4 +50,4 @@ export const configBuilder = ({
   };
 };
 
-export const DEFAULT_CONFIG = configBuilder();
+export const DEFAULT_CONFIG = buildConfig();
