@@ -92,7 +92,7 @@ import { buildLexoRank, NumeralSystem64 } from "@wewatch/lexorank";
 
 const LexoRank = buildLexoRank({
   NumeralSystem: NumeralSystem64,
-  maxDecimal: "100000000",
+  maxOrder: 8,
   initialMinDecimal: "1000",
   defaultGap: "1000",
 });

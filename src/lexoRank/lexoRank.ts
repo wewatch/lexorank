@@ -164,7 +164,7 @@ export class LexoRank {
       val.append(this.config.numeralSystem.radixPointChar);
     }
 
-    while (partialIndex < 6) {
+    while (partialIndex < this.config.maxOrder) {
       val.insert(0, zero);
       ++partialIndex;
     }

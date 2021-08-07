@@ -8,9 +8,8 @@ interface Type<T = unknown> {
 export interface LexoRankOptions {
   NumeralSystem?: Type<INumeralSystem>;
   defaultGap?: string;
-  maxDecimal?: string;
+  maxOrder?: number;
   initialMinDecimal?: string;
-  initialMaxDecimal?: string;
 }
 
 export interface LexoRankConfig {
@@ -18,6 +17,7 @@ export interface LexoRankConfig {
   zeroDecimal: LexoDecimal;
   oneDecimal: LexoDecimal;
   defaultGap: LexoDecimal;
+  maxOrder: number;
   minDecimal: LexoDecimal;
   maxDecimal: LexoDecimal;
   initialMinDecimal: LexoDecimal;
@@ -27,24 +27,32 @@ export interface LexoRankConfig {
 export const buildConfig = ({
   NumeralSystem = NumeralSystem36,
   defaultGap = "8",
-  maxDecimal = "1000000",
+  maxOrder = 6,
   initialMinDecimal = "100000",
-  initialMaxDecimal,
 }: LexoRankOptions = {}): LexoRankConfig => {
   const system = new NumeralSystem();
 
   const zeroDecimal = LexoDecimal.parse("0", system);
   const oneDecimal = LexoDecimal.parse("1", system);
 
-  initialMaxDecimal ??= system.toChar(system.base - 2) + maxDecimal.slice(2);
+  const minDecimal = zeroDecimal;
+  const maxDecimal = LexoDecimal.parse(
+    "1".padEnd(maxOrder + 1, "0"),
+    system,
+  ).subtract(oneDecimal);
+
+  const initialMaxDecimal = system
+    .toChar(system.base - 2)
+    .padEnd(maxOrder, "0");
 
   return {
     numeralSystem: system,
     zeroDecimal,
     oneDecimal,
+    minDecimal,
+    maxDecimal,
+    maxOrder,
     defaultGap: LexoDecimal.parse(defaultGap, system),
-    minDecimal: zeroDecimal,
-    maxDecimal: LexoDecimal.parse(maxDecimal, system).subtract(oneDecimal),
     initialMinDecimal: LexoDecimal.parse(initialMinDecimal, system),
     initialMaxDecimal: LexoDecimal.parse(initialMaxDecimal, system),
   };

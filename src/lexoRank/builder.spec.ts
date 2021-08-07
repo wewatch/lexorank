@@ -4,14 +4,14 @@ import { buildLexoRank } from "./builder";
 describe("Custom LexoRank", () => {
   const LexoRank = buildLexoRank({
     NumeralSystem: NumeralSystem64,
-    maxDecimal: "100000000",
+    maxOrder: 8,
     initialMinDecimal: "1000",
     defaultGap: "1000",
   });
 
   it("Min", () => {
     const minRank = LexoRank.min();
-    expect(minRank.toString()).toEqual("0|000000:");
+    expect(minRank.toString()).toEqual("0|00000000:");
     expect(minRank.genPrev()).toEqual(minRank);
     expect(LexoRank.parse(minRank.format())).toEqual(minRank);
   });
@@ -28,7 +28,7 @@ describe("Custom LexoRank", () => {
     expect(rank.genNext().toString()).toEqual("0|W0000zzz:");
 
     const minRank = LexoRank.min();
-    expect(minRank.genNext().toString()).toEqual("0|001000:");
+    expect(minRank.genNext().toString()).toEqual("0|00001000:");
   });
 
   it("genPrev", () => {
