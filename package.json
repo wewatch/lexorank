@@ -1,6 +1,6 @@
 {
   "name": "@wewatch/lexorank",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An implementation of JIRA's Lexorank algorithm",
   "author": "Duc-Minh Phan <alephvn@gmail.com>",
   "license": "Apache-2.0",

@@ -18,13 +18,17 @@ export class LexoRank {
     return this.bucket.format() + "|" + this.cons.formatDecimal(this.decimal);
   }
 
-  public static min(): LexoRank {
-    return this.from(LexoRankBucket.BUCKET_0, this.config.minDecimal);
+  public static min(
+    bucket: LexoRankBucket = LexoRankBucket.BUCKET_0,
+  ): LexoRank {
+    return this.from(bucket, this.config.minDecimal);
   }
 
-  public static middle(): LexoRank {
-    const minLexoRank = this.min();
-    return minLexoRank.between(this.max(minLexoRank.bucket));
+  public static middle(
+    bucket: LexoRankBucket = LexoRankBucket.BUCKET_0,
+  ): LexoRank {
+    const minLexoRank = this.min(bucket);
+    return minLexoRank.between(this.max(bucket));
   }
 
   public static max(
@@ -33,8 +37,10 @@ export class LexoRank {
     return this.from(bucket, this.config.maxDecimal);
   }
 
-  public static initial(bucket: LexoRankBucket): LexoRank {
-    return bucket === LexoRankBucket.BUCKET_0
+  public static initial(
+    bucket: LexoRankBucket = LexoRankBucket.BUCKET_0,
+  ): LexoRank {
+    return bucket.equals(LexoRankBucket.BUCKET_0)
       ? this.from(bucket, this.config.initialMinDecimal)
       : this.from(bucket, this.config.initialMaxDecimal);
   }
